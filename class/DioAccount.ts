@@ -1,7 +1,7 @@
 export abstract class DioAccount {
   private name: string
   private readonly accountNumber: number
-  balance: number = 0
+  private balance: number = 0
   private status: boolean = true
 
   constructor(name: string, accountNumber: number){
@@ -11,32 +11,56 @@ export abstract class DioAccount {
 
   setName = (name: string): void => {
     this.name = name
-    console.log('Nome alterado com sucesso!')
   }
 
   getName = (): string => {
     return this.name
   }
 
-  deposit = (): void => {
+  getBalance = (): number  => {
+    return this.balance
+  }
+  
+  // buscar o status nas classes filhas
+  getStatus = (): boolean  => {
+    return this.status
+  }
+  // buscar o setBalance nas classes filhas
+  setBalance = (balance: number):void=> {
+    this.balance += balance;
+  }   
+ /* Implementar os métodos de depósito (deposit) e saque (withdraw) na classe DioAccount
+
+  Os valores dos saldos devem ser alterados, de acordo com o valor informado para depósito
+  Apenas contas com o status true e saldo (balance) maior que o valor solicitado podem fazer saques*/
+
+  deposit = (valor: number): void => {
     if(this.validateStatus()){
-      console.log('Voce depositou')
+      this.balance += valor;
+    }else{
+      throw new Error('Contas com status falso não podem fazer deposito!')
     }
+
   }
 
-  withdraw = (): void => {
-    console.log('Voce sacou')
-  }
+  withdraw = (valor: number ): void => {
+    if(this.validateStatus() && this.balance >= valor){
+      this.balance -= valor
+    }
+    else{
+      try{
 
-  getBalance = (): void => {
-    console.log(this.balance)
+      }catch{
+        throw new Error('Contas com status falso não podem fazer saque!')
+      }
+    }  
   }
 
   private validateStatus = (): boolean => {
     if (this.status) {
       return this.status
     }
+    throw new Error('Conta desativada!')
 
-    throw new Error('Conta inválida')
   }
 }
